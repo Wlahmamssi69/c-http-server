@@ -12,8 +12,10 @@ int main()
   // pointer to the address
    struct  sockaddr_in addr;
   addr.sin_family = AF_INET;
+  
   //big-endian Most significant byte first
   addr.sin_port = htons(80);
+  
   // presentation
   inet_pton(AF_INET,ip,&addr.sin_addr.s_addr);
 
@@ -23,12 +25,23 @@ int main()
   // IPv6 (struct sockaddr_in6)
   // UNIX domain sockets (struct sockaddr_un)
   int result = connect(socketFD,(const struct sockaddr *) &addr,sizeof addr);
-
+  
   // testing connection :  success => 0 ; error =>-1
   if(result == 0)
-  printf("Connection successful");
+  printf("Connection successful\n");
+  char * request;
+  request = "GET / HTTP/1.1\r\nHost:google.com\r\n\r\n";
+  send(socketFD,request,strlen(request),0);
+
+
+  char buffer[1024];
+  recv(socketFD,buffer,1024,0);
+ 
+  printf("response : %s\n",buffer);
+
+
+
   
-
-
-
+  
+  
 }
